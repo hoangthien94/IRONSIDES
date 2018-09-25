@@ -23,15 +23,13 @@
 -->
 
 <launch>
+
+  <!-- PerceptIn stereo camera + IMU -->
 	<arg name = "left_cam_calib"  default="$(find pirvs_ros)/pirvs/calib/calib_PerceptIn_Ironsides_left_raw.yaml" />
 	<arg name = "right_cam_calib" default="$(find pirvs_ros)/pirvs/calib/calib_PerceptIn_Ironsides_right_raw.yaml" />
 
 	<group ns = "pirvs_cam_raw">
 		<node pkg="pirvs_ros" name="stereo_camera_node" type="stereo_camera_node"
 		args="$(arg left_cam_calib) $(arg right_cam_calib)"/>
-    </group>
-
-    <node name="image_view_left" pkg="image_view" type="image_view" args="image:=/pirvs_cam_raw/StereoImage/left" output="screen" />
-    <node name="image_view_right" pkg="image_view" type="image_view" args="image:=/pirvs_cam_raw/StereoImage/right" output="screen" />
-
+  </group>
 </launch>

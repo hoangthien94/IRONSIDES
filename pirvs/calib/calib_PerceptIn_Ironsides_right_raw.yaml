@@ -1,0 +1,57 @@
+camera_matrix:
+  cols: 3
+  data:
+  - 206.77024560197486
+  - 0.0
+  - 305.7365728884897
+  - 0.0
+  - 208.34860622319542
+  - 239.4868320198194
+  - 0.0
+  - 0.0
+  - 1.0
+  rows: 3
+camera_name: stereo_left
+distortion_coefficients:
+  cols: 4
+  data:
+  - 0.0
+  - 0.0
+  - -0.0029538705115799532
+  - -0.0020489019031403382
+  rows: 1
+distortion_model: catadioptric
+image_height: 480
+image_width: 640
+projection_matrix:
+  cols: 4
+  data:
+  - 206.77024560197486
+  - 0.0
+  - 305.7365728884897
+  - 0
+  - 0.0
+  - 208.34860622319542
+  - 239.4868320198194
+  - 0
+  - 0.0
+  - 0.0
+  - 1.0
+  - 0
+  rows: 3
+rectification_matrix:
+  cols: 3
+  data:
+  - 1
+  - 0
+  - 0
+  - 0
+  - 1
+  - 0
+  - 0
+  - 0
+  - 1
+  rows: 3
+unified_model_params:
+  eta: 3.6314715321781765
+  xi: 1.739169334418067

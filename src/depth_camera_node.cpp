@@ -126,9 +126,9 @@ int main(int argc, char **argv) {
             ros::init_options::NoSigintHandler);
   ros::NodeHandle nh;
   image_transport::ImageTransport it(nh);
-  image_transport::Publisher pub_left =
+  image_transport::Publisher pub_rect_left =
       it.advertise("StereoImage/rect_left", Q_SIZE_STEREOIMAGE);
-  image_transport::Publisher pub_right =
+  image_transport::Publisher pub_rect_right =
       it.advertise("StereoImage/rect_right", Q_SIZE_STEREOIMAGE);
   image_transport::Publisher pub_depth =
       it.advertise("StereoImage/depth", Q_SIZE_STEREOIMAGE);
@@ -164,8 +164,8 @@ int main(int argc, char **argv) {
       CreateImageMsg(&image_msg_left, cv_img_left, "StereoRectLeft", timestamp);
       CreateImageMsg(&image_msg_right, cv_img_right, "StereoRectRight",
                      timestamp);
-      pub_left.publish(image_msg_left);
-      pub_right.publish(image_msg_right);
+      pub_rect_left.publish(image_msg_left);
+      pub_rect_right.publish(image_msg_right);
       // publish depth image
       std_msgs::Header image_header_depth;
       image_header_depth.stamp = timestamp;

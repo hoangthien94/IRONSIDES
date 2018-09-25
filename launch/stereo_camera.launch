@@ -1,0 +1,43 @@
+<!--
+  Copyright 2017 PerceptIn
+
+  This End-User License Agreement (EULA) is a legal agreement between you
+  (the purchaser) and PerceptIn regarding your use of
+  PerceptIn Robotics Vision System (PIRVS), including PIRVS SDK and
+  associated documentation (the "Software").
+
+  IF YOU DO NOT AGREE TO ALL OF THE TERMS OF THIS EULA, DO NOT INSTALL,
+  USE OR COPY THE SOFTWARE.
+
+   :+++++;                                                  ++'
+   ++++++++;                                                ++'
+   ++`   .++ .'''''` '''',     :':   `''''', ;''':  '''''''`++' '`   ''
+   ++`    ++ ++''''.;+'''++, ;++'++, ++'''',,+'''++:+''++''.++',+'   ++
+   ++`  :+++ ++     ;+.   ++ ++   ++ ++     ,+,   ++   ++   ++',+++  ++
+   +++++++`  ++     ;+.  .++ ++      ++     ,+,  .++   ++   ++',+++. ++
+   +++:`     +++++  ;+.;++'  ++      +++++  ,+++++;    ++   ++',+,++ ++
+   ++`       ++```  ;+`++    ++      ++```  ,+'.       ++   ++',+,,+'++
+   ++`       ++     ;+.,++   ++      ++     ,+,        ++   ++',+, ++++
+   ++`       ++     ;+. :++  ++. ,++ ++     ,+,        ++   ++',+,  +++
+   '+`       ++''''.:+.  ;++  '+'+'  ++'''',,+,        '+   ++',+,  ;+'
+-->
+
+<launch>
+
+  <!-- PerceptIn stereo camera + IMU -->
+	<arg name = "left_cam_calib"  default="$(find pirvs_ros)/pirvs/calib/calib_PerceptIn_Ironsides_left_raw.yaml" />
+	<arg name = "right_cam_calib" default="$(find pirvs_ros)/pirvs/calib/calib_PerceptIn_Ironsides_right_raw.yaml" />
+
+	<group ns = "pirvs_cam_raw">
+
+		<node pkg="pirvs_ros" name="stereo_camera_node" type="stereo_camera_node"
+		args="$(arg left_cam_calib) $(arg right_cam_calib)"/>
+
+    <node pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc" output="screen">
+        <remap from="left/image_raw" to="StereoImage/left"/>
+        <remap from="left/camera_info" to="StereoImage/left/camera_info"/>
+        <remap from="right/image_raw" to="StereoImage/right"/>
+        <remap from="right/camera_info" to="StereoImage/right/camera_info"/>
+    </node>
+  </group>
+</launch>

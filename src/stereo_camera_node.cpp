@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
       it.advertise("StereoImage/right", Q_SIZE_STEREOIMAGE);
   ros::Publisher pub_imu =
       nh.advertise<sensor_msgs::Imu>("IMU/data_raw", Q_SIZE_IMU);
+
   ros::Publisher pub_left_cam_info;
   pub_left_cam_info = nh.advertise<sensor_msgs::CameraInfo>(
       "StereoImage/left/camera_info", Q_SIZE_CAMERAINFO);
@@ -148,6 +149,7 @@ int main(int argc, char **argv) {
     if (!gDevice->GetData(&data)) {
       continue;
     }
+    // Publish stereo data
     std::shared_ptr<const PIRVS::StereoData> stereo_data =
         std::dynamic_pointer_cast<const PIRVS::StereoData>(data);
     if (stereo_data) {
@@ -177,6 +179,7 @@ int main(int argc, char **argv) {
       pub_right_cam_info.publish(camera_calib_msg_right);
     }
 
+    // Publish stereo depth data
     std::shared_ptr<const PIRVS::ImuData> imu_data =
         std::dynamic_pointer_cast<const PIRVS::ImuData>(data);
     if (imu_data) {
