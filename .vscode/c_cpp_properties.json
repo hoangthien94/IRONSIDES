@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/iot/catkin_ws/devel/include",
+                "/home/iot/svo_install_ws/install/include",
+                "/opt/ros/kinetic/include",
+                "/home/iot/catkin_ws/src/apriltags2_ros/apriltags2/include",
+                "/home/iot/catkin_ws/src/apriltags2_ros/apriltags2_ros/include",
+                "/home/iot/catkin_ws/src/myahrs_driver/include",
+                "/home/iot/catkin_ws/src/realsense-2.0.3/realsense2_camera/include",
+                "/home/iot/catkin_ws/src/serial/include",
+                "/home/iot/catkin_ws/src/ueye_cam/include",
+                "/home/iot/catkin_ws/src/uwb_driver/include",
+                "/home/iot/catkin_ws/src/vicon/vicon_driver/include",
+                "/home/iot/catkin_ws/src/vicon/vicon_odom/include",
+                "/usr/include"
+            ],
+            "name": "Linux",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

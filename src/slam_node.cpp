@@ -38,9 +38,11 @@
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/image_encodings.h>
 #include <signal.h>
+#include <tf/tf.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <memory>
 #include <opencv2/highgui.hpp>
+#include <eigen3/Eigen/Eigen>
 
 #define Q_SIZE_STEREOIMAGE 1
 #define Q_SIZE_POSESTAMPED 30
@@ -107,7 +109,7 @@ void CreatePoseMsg(geometry_msgs::PoseStamped *msg_poseStamped,
                    PIRVS::PoseInQuaternion pose_in_quaternion,
                    ros::Time timestamp) {
   msg_poseStamped->header.stamp = timestamp;
-  msg_poseStamped->header.frame_id = "pose";
+  msg_poseStamped->header.frame_id = "world";
   msg_poseStamped->pose.position.x = pose_in_quaternion.tx;
   msg_poseStamped->pose.position.y = pose_in_quaternion.ty;
   msg_poseStamped->pose.position.z = pose_in_quaternion.tz;
@@ -235,6 +237,7 @@ int main(int argc, char **argv) {
     }
     if (stereo_data) {
       ros::Time timestamp((double)stereo_data->timestamp / 1000.0f);
+
       // publish odom tranform
       odom_trans.header.stamp = timestamp;
       odom_broadcaster.sendTransform(odom_trans);
@@ -245,17 +248,44 @@ int main(int argc, char **argv) {
         pointcloud_trans.header.stamp = timestamp;
         pointcloud_broadcaster.sendTransform(pointcloud_trans);
       }
+
       // publish pose
       PIRVS::PoseInQuaternion pose_in_quaternion;
       if (slam_state->GetPoseInQuaternion(&pose_in_quaternion)) {
         geometry_msgs::PoseStamped msg_poseStamped;
         CreatePoseMsg(&msg_poseStamped, pose_in_quaternion, timestamp);
+            
+        Eigen::Quaterniond q;
+        q.x() = msg_poseStamped.pose.orientation.x;
+        q.y() = msg_poseStamped.pose.orientation.y;
+        q.z() = msg_poseStamped.pose.orientation.z;
+        q.w() = msg_poseStamped.pose.orientation.w;
+
+        Eigen::Vector3d p;
+        p[0] = msg_poseStamped.pose.position.x;
+        p[1] = msg_poseStamped.pose.position.y;
+        p[2] = msg_poseStamped.pose.position.z;
+
+        // Rotate the quaternions according to camera's orientation
+        tf::Quaternion qq = tf::Quaternion(0.70710678118, 0, 0, -0.70710678118) * tf::Quaternion(q.x(), q.y(), q.z(), q.w());
+                            // * tf::Quaternion(0.70710678118, 0, 0, -0.70710678118);
+
+        // ROS_INFO("%f %f %f %f", qq.x(), qq.y(), qq.z(), qq.w());
+        msg_poseStamped.pose.position.x = p[0];
+        msg_poseStamped.pose.position.y = p[2];
+        msg_poseStamped.pose.position.z = -p[1];
+        msg_poseStamped.pose.orientation.x = qq.x();
+        msg_poseStamped.pose.orientation.y = qq.y();
+        msg_poseStamped.pose.orientation.z = qq.z();
+        msg_poseStamped.pose.orientation.w = qq.w();
+
         pub_pose.publish(msg_poseStamped);
 
         nav_msgs::Odometry msg_odom;
         CreateOdometryMsg(&msg_odom, pose_in_quaternion, timestamp);
         odom_pub.publish(msg_odom);
       }
+
       // Decode and publish stereo images
       cv::Mat cv_img_left =
           cv::Mat(stereo_data->img_l.height, stereo_data->img_l.width, CV_8UC1);
